@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sınav Sayaçları</title>
+    <style>
+        body { margin: 0; padding: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; min-height: 100vh; background-color: #f4f4f4; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .header-container { background: white; padding: 30px; text-align: center; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); max-width: 500px; width: 95%; margin-bottom: 25px; }
+        h1 { font-size: 1.6rem; font-weight: 900; color: #000; margin: 0 0 20px 0; text-transform: uppercase; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        .countdown-wrapper { display: flex; justify-content: center; gap: 8px; }
+        .box { background-color: #e62117; color: white; padding: 12px 8px; border-radius: 6px; min-width: 65px; display: flex; flex-direction: column; align-items: center; }
+        /* KPSS için farklı renk (isteğe bağlı) */
+        .kpss-box { background-color: #2c3e50; } 
+        .number { font-size: 1.8rem; font-weight: 800; line-height: 1; }
+        .label { font-size: 0.7rem; margin-top: 6px; font-weight: 600; opacity: 0.8; }
+    </style>
+</head>
+<body>
+
+    <div class="header-container" id="dgs-container">
+        <h1>DGS - 19 TEMMUZ</h1>
+        <div class="countdown-wrapper">
+            <div class="box"><span class="number" id="dgs-d">000</span><span class="label">gün</span></div>
+            <div class="box"><span class="number" id="dgs-h">00</span><span class="label">saat</span></div>
+            <div class="box"><span class="number" id="dgs-m">00</span><span class="label">dakika</span></div>
+            <div class="box"><span class="number" id="dgs-s">00</span><span class="label">saniye</span></div>
+        </div>
+    </div>
+
+    <div class="header-container" id="kpss-container">
+        <h1>KPSS - 4 EKİM</h1>
+        <div class="countdown-wrapper">
+            <div class="box kpss-box"><span class="number" id="kpss-d">000</span><span class="label">gün</span></div>
+            <div class="box kpss-box"><span class="number" id="kpss-h">00</span><span class="label">saat</span></div>
+            <div class="box kpss-box"><span class="number" id="kpss-m">00</span><span class="label">dakika</span></div>
+            <div class="box kpss-box"><span class="number" id="kpss-s">00</span><span class="label">saniye</span></div>
+        </div>
+    </div>
+
+    <script>
+        const dgsTarget = new Date("July 19, 2026 09:00:00").getTime();
+        const kpssTarget = new Date("October 4, 2026 10:15:00").getTime();
+
+        function updateClock(target, prefix, containerId) {
+            const now = Date.now();
+            const diff = target - now;
+            const container = document.getElementById(containerId);
+
+            if (diff <= 0) {
+                container.innerHTML = "<h1>ZAMAN DOLDU!</h1><p>Başarılar dilerim.</p>";
+                return;
+            }
+
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+
+            document.getElementById(prefix + "-d").textContent = d;
+            document.getElementById(prefix + "-h").textContent = h < 10 ? "0" + h : h;
+            document.getElementById(prefix + "-m").textContent = m < 10 ? "0" + m : m;
+            document.getElementById(prefix + "-s").textContent = s < 10 ? "0" + s : s;
+        }
+
+        function run() {
+            updateClock(dgsTarget, "dgs", "dgs-container");
+            updateClock(kpssTarget, "kpss", "kpss-container");
+            setTimeout(run, 1000 - (Date.now() % 1000));
+        }
+
+        run();
+    </script>
+</body>
+</html>
